@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "140212976188",
+    "firebase_url": "https://muskan-classes-12th-science-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "muskan-classes-12th-science",
+    "storage_bucket": "muskan-classes-12th-science.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:140212976188:android:3112b1e9fa85dfbd7ea139",
+        "android_client_info": {
+          "package_name": "muskanclasses.class12th_science.model_paper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "140212976188-j07o9g77587d1hba5upc5aanjmo9l0tg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuvuW0jMTBHXVwEp4kIWS1TQjl9xBS5wE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "140212976188-j07o9g77587d1hba5upc5aanjmo9l0tg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

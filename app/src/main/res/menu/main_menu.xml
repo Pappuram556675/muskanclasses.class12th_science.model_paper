@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_home"
+        android:title="Home"
+        android:icon="@drawable/home" />
+
+    <item
+        android:id="@+id/nav_chat"
+        android:title="Students Group"
+        android:icon="@drawable/baseline_announcement_24" />
+
+    <item
+        android:id="@+id/nav_ask_question"
+        android:title="Ask Question"
+        android:icon="@drawable/baseline_assignment_add_24" />
+
+    <item
+        android:id="@+id/nav_whatsapp"
+        android:title="Whatsapp"
+        android:icon="@drawable/ic_whatsapp" />
+
+    <item
+        android:id="@+id/nav_telegram"
+        android:title="Telegram"
+        android:icon="@drawable/ic_telegram" />
+
+    <item
+        android:id="@+id/nav_help"
+        android:title="Help &amp; Feedback"
+        android:icon="@drawable/ic_email" />
+
+    <item
+        android:id="@+id/nav_share"
+        android:title="Share Application"
+        android:icon="@drawable/shareeeee" />
+
+    <item
+        android:id="@+id/nav_rate"
+        android:title="Rate Us"
+        android:icon="@drawable/rate" />
+
+
+    <item
+        android:id="@+id/nav_website"
+        android:title="Our Website"
+        android:icon="@drawable/ic_link" />
+    <item
+        android:id="@+id/nav_policy"
+        android:title="Privacy Policy"
+        android:icon="@drawable/ic_link" />
+    <item
+        android:id="@+id/nav_term"
+        android:title="Terms &amp; Conditions"
+        android:icon="@drawable/ic_link" />
+
+
+</menu>
