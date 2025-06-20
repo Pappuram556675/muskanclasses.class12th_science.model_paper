@@ -9,32 +9,32 @@
     <item
         android:id="@+id/nav_chat"
         android:title="Students Group"
-        android:icon="@drawable/baseline_announcement_24" />
+        android:icon="@drawable/chat" />
 
     <item
         android:id="@+id/nav_ask_question"
         android:title="Ask Question"
-        android:icon="@drawable/baseline_assignment_add_24" />
+        android:icon="@drawable/ask_question" />
 
     <item
         android:id="@+id/nav_whatsapp"
         android:title="Whatsapp"
-        android:icon="@drawable/ic_whatsapp" />
+        android:icon="@drawable/whatsapp" />
 
     <item
         android:id="@+id/nav_telegram"
         android:title="Telegram"
-        android:icon="@drawable/ic_telegram" />
+        android:icon="@drawable/telegram" />
 
     <item
         android:id="@+id/nav_help"
         android:title="Help &amp; Feedback"
-        android:icon="@drawable/ic_email" />
+        android:icon="@drawable/mail" />
 
     <item
         android:id="@+id/nav_share"
         android:title="Share Application"
-        android:icon="@drawable/shareeeee" />
+        android:icon="@drawable/share" />
 
     <item
         android:id="@+id/nav_rate"
@@ -45,15 +45,15 @@
     <item
         android:id="@+id/nav_website"
         android:title="Our Website"
-        android:icon="@drawable/ic_link" />
+        android:icon="@drawable/website" />
     <item
         android:id="@+id/nav_policy"
         android:title="Privacy Policy"
-        android:icon="@drawable/ic_link" />
+        android:icon="@drawable/privicy" />
     <item
         android:id="@+id/nav_term"
         android:title="Terms &amp; Conditions"
-        android:icon="@drawable/ic_link" />
+        android:icon="@drawable/privicy" />
 
 
 </menu>

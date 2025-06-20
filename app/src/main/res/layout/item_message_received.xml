@@ -1,79 +1,60 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:padding="8dp"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/message_background_received"
-    android:layout_gravity="end"
+    android:layout_gravity="start"
     android:layout_marginTop="4dp"
-
     android:layout_marginBottom="8dp"
-    android:maxWidth="250dp">
+    android:maxWidth="280dp">
 
-
-
-
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        android:layout_marginBottom="4dp" />
 
     <TextView
         android:id="@+id/textMessage"
-        android:textSize="16sp"
-        android:textColor="#FFFFFF"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="\n"/>
-
+        android:textSize="16sp"
+        android:autoLink="all"
+        android:linksClickable="true"
+        android:textColor="#000000"
+        android:textColorLink="#0000EE"
+        android:paddingBottom="4dp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="start">
 
         <TextView
             android:id="@+id/senderName"
-            android:textStyle="bold"
-            android:textSize="12sp"
-            android:textColor="#FFFFFF"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#555555"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="  |  "
-            android:textColor="@color/white"/>
+            android:textColor="#888888" />
 
         <TextView
             android:id="@+id/textTime"
-            android:textSize="10sp"
-            android:textColor="#FFFFFF"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="end" />
-
-
-
-
-
-
-
-
+            android:textSize="10sp"
+            android:textColor="#888888" />
     </LinearLayout>
-
-
-
-
-
-
-
-
 </LinearLayout>
-
-
-

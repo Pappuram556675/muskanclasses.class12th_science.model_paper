@@ -51,11 +51,24 @@ public class LoginnActivity extends AppCompatActivity {
             return insets;
         });
 
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPreferences", MODE_PRIVATE);
+        String name = sharedPreferences.getString("name", "null");
+        String email = sharedPreferences.getString("email", "null");
+        if (sharedPreferences.getString("email", "null").equals("null")){
+
+
+
+        } else {
+
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
 
 
         mAuth = FirebaseAuth.getInstance();
 
-        //Toast.makeText(activity, firebaseUser.getDisplayName(), Toast.LENGTH_SHORT).show();
 
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -118,17 +131,21 @@ public class LoginnActivity extends AppCompatActivity {
                         editor.putString("email", user.getEmail());
                         editor.apply(); // or editor.commit();
 
-                        String url = "https://muskanclasses.com/application/12th-science/layout/model-paper/home.php?v=2";
+                        //String url = "https://muskanclasses.com/application/12th-science/layout/model-paper/home.php?v=2";
 
-                        Intent intent = new Intent(LoginnActivity.this, ListActivity.class);
-                        intent.putExtra("url", url);
+                        Intent intent = new Intent(LoginnActivity.this, MainActivity.class);
+
                         startActivity(intent);
                         finish();
 
 
                         //updateUI(user);
                     } else {
-                        Toast.makeText(LoginnActivity.this, "faild", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginnActivity.this, "Please Try Again ...", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(LoginnActivity.this, MainActivity.class);
+
+                        startActivity(intent);
+                        finish();
                         //updateUI(null);
                     }
                 });

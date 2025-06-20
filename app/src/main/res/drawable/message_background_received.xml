@@ -1,12 +1,21 @@
-<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-    <gradient
-        android:startColor="#255164"
-        android:endColor="#255164"
-    android:angle="360"/>
-    <corners android:radius="12dp"/>
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Light Gray Background -->
+    <solid android:color="#EDEDED" />
+
+    <!-- Rounded Corners (except bottom-right to simulate tail) -->
+    <corners
+        android:topLeftRadius="12dp"
+        android:topRightRadius="12dp"
+        android:bottomLeftRadius="12dp"
+        android:bottomRightRadius="0dp" />
+
+    <!-- Optional: Padding inside message bubble -->
     <padding
-        android:left="8dp"
+        android:left="12dp"
         android:top="8dp"
-        android:right="8dp"
-        android:bottom="8dp"/>
+        android:right="12dp"
+        android:bottom="8dp" />
 </shape>

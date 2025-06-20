@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/splash_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/splash_background"
+    tools:context=".LoginnActivity">
+
+    <!-- सरस्वती माता का फोटो -->
+    <ImageView
+        android:id="@+id/saraswati_image"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:src="@drawable/maaaaa"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:scaleType="fitCenter"
+        android:contentDescription="माँ सरस्वती" />
+
+    <!-- App Name -->
+    <TextView
+        android:id="@+id/app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Muskan Classes"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:layout_below="@id/saraswati_image"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp" />
+
+    <!-- Tagline -->
+    <TextView
+        android:id="@+id/tagline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="शिक्षा ही शक्ति है"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
+        android:layout_below="@id/app_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp" />
+
+    <!-- ProgressBar (Loader) -->
+    <ProgressBar
+        android:id="@+id/progress_loader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tagline"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        style="?android:attr/progressBarStyleLarge"
+        android:visibility="visible"
+        android:indeterminate="true" />
+
+    <!-- App Open Button -->
+    <Button
+        android:id="@+id/btn_open_app"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ऐप खोलें"
+        android:layout_below="@id/progress_loader"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="#4CAF50"
+        android:textColor="@android:color/white"
+        android:paddingLeft="24dp"
+        android:textSize="35dp"
+        android:paddingRight="24dp"
+        android:visibility="gone" />
+
+    <!-- App Update Button -->
+    <Button
+        android:id="@+id/btn_update_app"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="अपडेट करें"
+        android:layout_below="@id/btn_open_app"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#F44336"
+        android:textColor="@android:color/white"
+        android:paddingLeft="24dp"
+        android:textSize="35dp"
+        android:paddingRight="24dp"
+        android:visibility="gone" />
+
+</RelativeLayout>

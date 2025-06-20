@@ -6,19 +6,12 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-
-
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
-
         android:layout_height="match_parent"
+        xmlns:tools="http://schemas.android.com/tools"
         tools:context=".RealTimeChatActivity">
-
 
         <!-- Toolbar -->
         <com.google.android.material.appbar.MaterialToolbar
@@ -32,30 +25,32 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Online Users Text -->
+        <!-- Online Users Text BELOW Toolbar -->
         <TextView
             android:id="@+id/onlineUsersText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Online Users: 0"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:padding="8dp"
             android:textSize="16sp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/toolbar"
-            app:layout_constraintTop_toTopOf="@id/toolbar"
-            app:layout_constraintVertical_bias="0.5"/>
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <!-- Messages RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:padding="8dp"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            android:clipToPadding="false"
+            app:layout_constraintTop_toBottomOf="@id/onlineUsersText"
             app:layout_constraintBottom_toTopOf="@+id/messageLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
 
         <!-- Message Input Layout -->
         <LinearLayout
@@ -69,6 +64,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
+            <!-- Image Picker Button -->
+
+
+            <!-- Message Input -->
             <EditText
                 android:id="@+id/input"
                 android:layout_width="0dp"
@@ -88,6 +87,19 @@
                 android:imeOptions="actionSend" />
 
             <ImageButton
+                android:id="@+id/imagePickerBtn"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+
+                android:layout_marginStart="6dp"
+                android:backgroundTint="#eeeeee"
+                android:background="@drawable/bg_input_whatsapp"
+                android:src="@android:drawable/ic_menu_gallery"
+                android:tint="#000000"
+                android:contentDescription="Pick Image" />
+
+            <!-- Send Button -->
+            <ImageButton
                 android:id="@+id/sendBtn"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
@@ -98,7 +110,6 @@
                 android:tint="#FFFFFF"
                 android:contentDescription="Send" />
         </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 </androidx.drawerlayout.widget.DrawerLayout>

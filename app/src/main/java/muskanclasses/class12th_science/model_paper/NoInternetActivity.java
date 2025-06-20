@@ -37,4 +37,11 @@ public class NoInternetActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    public void onBackPressed() {
+
+
+
+    }
 }

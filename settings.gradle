@@ -16,7 +16,13 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url "https://jitpack.io" } // needed for PhotoView and Glide if using GitHub
+        maven { url "https://plugins.gradle.org/m2/" }
+
+
     }
+
+
 }
 
 rootProject.name = "12th Science Model Paper"

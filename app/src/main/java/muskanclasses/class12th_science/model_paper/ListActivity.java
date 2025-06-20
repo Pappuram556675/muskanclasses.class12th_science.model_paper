@@ -4,12 +4,21 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.webkit.ConsoleMessage;
 import android.webkit.CookieManager;
 import android.webkit.ValueCallback;
@@ -19,11 +28,20 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 public class ListActivity extends AppCompatActivity {
 
@@ -34,9 +52,19 @@ public class ListActivity extends AppCompatActivity {
     private ValueCallback<Uri[]> filePathCallback;
 
 
-    String url = "false";
-    String loginWithGoogle = "false";
+
     Toolbar toolbar;
+
+    String url = "false";
+    String tab = "false";
+    String video_tab = "false";
+    String chrome = "false";
+    String firebase_event = "false";
+
+    String pdf = "false";
+
+    String nca = "false";
+    FirebaseAnalytics mFirebaseAnalytics;
 
 
     @Override
@@ -66,6 +94,14 @@ public class ListActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        // एक basic event log करें
+        Bundle bundle = new Bundle();
+        bundle.putString("package", getPackageName());
+
+        mFirebaseAnalytics.logEvent("List_activity_open", bundle);
 
 
 
@@ -97,7 +133,7 @@ public class ListActivity extends AppCompatActivity {
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true); // For API < 21
         cookieManager.setAcceptThirdPartyCookies(webView, true);
-        webView.addJavascriptInterface(new web_function(ListActivity.this), "android");
+
         SharedPreferences sharedPreferences = getSharedPreferences("MyAppPreferences", MODE_PRIVATE);
         String name = sharedPreferences.getString("name", "null");
         String email = sharedPreferences.getString("email", "null");
@@ -110,8 +146,16 @@ public class ListActivity extends AppCompatActivity {
         }
 
 
-        //String muskan = getIntent().getStringExtra("url"+"?name="+name+"&email="+email);
-        //Toast.makeText(this, muskan, Toast.LENGTH_LONG).show();
+        if (!isInternetAvailable()) {
+
+            webView.setVisibility(GONE);
+            Intent intent = new Intent(getApplicationContext(), NoInternetActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+
+
         webView.loadUrl(getIntent().getStringExtra("url"));
         cookieManager.flush();
 
@@ -149,26 +193,8 @@ public class ListActivity extends AppCompatActivity {
             @Override
             public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
 
-
-
-
-                if (consoleMessage.message().equals("loginWithGoogle")){
-
-                    Intent intent = new Intent(getApplicationContext(), LoginnActivity.class);
-
-
-                    loginWithGoogle = "false";
-                    startActivity(intent);
-                    finish();
-
-
-                }
-
-
-
-
-
-
+                Log.d("suman", consoleMessage.message());
+                handel_consolemessage(consoleMessage.message());
 
                 return super.onConsoleMessage(consoleMessage);
             }
@@ -186,13 +212,341 @@ public class ListActivity extends AppCompatActivity {
 
     }
 
-    public class WebAppInterface {
-        @android.webkit.JavascriptInterface
-        public void receiveMessage(String msg) {
-            // Show message from web in Toast
-            Toast.makeText(ListActivity.this, msg, Toast.LENGTH_SHORT).show();
+    private void handel_consolemessage(String message) {
+
+        if (url.equals("true")){
+
+            Intent intent = new Intent(getApplicationContext(), ListActivity.class);
+            intent.putExtra("url", message);
+            url = "false";
+            startActivity(intent);
+        }
+
+        if (tab.equals("true")){
+
+            open_tab(message);
+
+        }
+
+        if (chrome.equals("true")){
+
+            Intent intent1 = new Intent(Intent.ACTION_VIEW, Uri.parse(message));
+            startActivity(intent1);
+
+        }
+
+        if (firebase_event.equals("true")){
+
+
+
+            Bundle bundle = new Bundle();
+            bundle.putString("package", getPackageName());
+            firebase_event = "false";
+
+            mFirebaseAnalytics.logEvent(message, bundle);
+
+        }
+
+        if (video_tab.equals("true")){
+
+            open_video_tab(message);
+        }
+
+        if (message.equals("url")){
+            url = "true";
+        }
+
+        if (message.equals("tab")){
+
+            tab = "true";
+
+        }
+
+        if (message.equals("video_tab")){
+
+            video_tab = "true";
+
+        }
+
+        if (message.equals("chrome")){
+
+            chrome = "true";
+        }
+
+        if (pdf.equals("true")){
+
+            Intent intent = new Intent(getApplicationContext(), ZoomingActivity.class);
+            intent.putExtra("url", message);
+            pdf = "false";
+            startActivity(intent);
+        }
+
+        if (nca.equals("true")){
+
+            Intent intent = new Intent(getApplicationContext(), PageLoadWithUserDataActivity.class);
+            intent.putExtra("url", message);
+            nca = "false";
+            startActivity(intent);
+        }
+
+        if (message.equals("firebase_event")){
+
+            firebase_event = "true";
+        }
+
+        if (message.equals("pdf")){
+
+            pdf = "true";
+        }
+
+        if (message.equals("NCA")){
+
+            nca = "true";
+        }
+
+
+        if (message.equals("share")){
+
+            Bundle bundle = new Bundle();
+            bundle.putString("package", getPackageName());
+
+            mFirebaseAnalytics.logEvent("page_share", bundle);
+            String appPackageName = getPackageName(); // gets your app's package name
+            String shareBody = "Check out this amazing app:\n\n" +
+                    "https://play.google.com/store/apps/details?id=" + appPackageName;
+
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Muskan Classes App");
+            intent.putExtra(Intent.EXTRA_TEXT, shareBody);
+
+            startActivity(Intent.createChooser(intent, "Share via"));
+
+        }
+
+        if (message.equals("rate")){
+
+            Bundle bundle = new Bundle();
+            bundle.putString("package", getPackageName());
+
+            mFirebaseAnalytics.logEvent("page_rate", bundle);
+            Uri uri = Uri.parse("market://details?id=" + getPackageName());
+            Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+            goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
+                    Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
+                    Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+            try {
+                startActivity(goToMarket);
+            } catch (ActivityNotFoundException e) {
+                // Fallback if Play Store is not installed
+                Uri webUri = Uri.parse("https://play.google.com/store/apps/details?id=" + getPackageName());
+                startActivity(new Intent(Intent.ACTION_VIEW, webUri));
+            }
+
+
+        }
+
+        if (message.equals("email")){
+
+            Bundle bundle = new Bundle();
+            bundle.putString("package", getPackageName());
+
+            mFirebaseAnalytics.logEvent("page_email", bundle);
+            String recipient = "muskanclassesteam@gmail.com";
+            String subject = "Report Application Error";
+            String body = "Hello,\n\nThis is a Report Application Error email .";
+
+            Intent intent = new Intent(Intent.ACTION_SENDTO);
+            intent.setData(Uri.parse("mailto:" + recipient));
+            intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+            intent.putExtra(Intent.EXTRA_TEXT, body);
+
+            try {
+                startActivity(Intent.createChooser(intent, "Send Email"));
+            } catch (android.content.ActivityNotFoundException ex) {
+                // No email app installed
+                ex.printStackTrace();
+            }
+
+        }
+
+        if (message.equals("whatsapp")){
+
+            Bundle bundle = new Bundle();
+            bundle.putString("package", getPackageName());
+
+            mFirebaseAnalytics.logEvent("page_whatsapp", bundle);
+            Intent intent1 = new Intent(Intent.ACTION_VIEW, Uri.parse("https://muskanclasses.com/whatsapp"));
+            startActivity(intent1);
+        }
+
+        if (message.equals("telegram")){
+
+            Bundle bundle = new Bundle();
+            bundle.putString("package", getPackageName());
+
+            mFirebaseAnalytics.logEvent("page_telegram", bundle);
+            Intent intent1 = new Intent(Intent.ACTION_VIEW, Uri.parse("https://muskanclasses.com/telegram"));
+            startActivity(intent1);
+        }
+
+
+        if (message.equals("site")){
+
+            Bundle bundle = new Bundle();
+            bundle.putString("package", getPackageName());
+
+            mFirebaseAnalytics.logEvent("page_site", bundle);
+            Intent intent1 = new Intent(Intent.ACTION_VIEW, Uri.parse("https://muskanclasses.com/"));
+            startActivity(intent1);
+        }
+
+        if (message.equals("ads")){
+
+            AdsManager.show_int_ads_with_callback(ListActivity.this);
+        }
+
+        if (message.equals("video_ads")){
+
+            AdsManager.showRewardedAd(ListActivity.this);
+
+
+        }
+
+        if (message.equals("chat")){
+
+            Intent intent = new Intent(getApplicationContext(), RealTimeChatActivity.class);
+            startActivity(intent);
+
         }
     }
+
+    private void open_video_tab(String message) {
+
+        video_tab = "false";
+        RewardedAd rewardedAd = AdsManager.rewardedAd;
+
+
+
+        Drawable drawable = ContextCompat.getDrawable(ListActivity.this, R.drawable.baseline_arrow_back_24);
+
+
+        drawable = DrawableCompat.wrap(drawable).mutate();
+
+        Bitmap bitmap = Bitmap.createBitmap(
+                drawable.getIntrinsicWidth(),
+                drawable.getIntrinsicHeight(),
+                Bitmap.Config.ARGB_8888
+        );
+
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        // Now set the close button icon
+        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+        builder.setToolbarColor(ContextCompat.getColor(ListActivity.this, R.color.app_color));
+        builder.setCloseButtonIcon(bitmap); // your vector converted to bitmap
+        builder.enableUrlBarHiding();
+        //builder.setShowTitle(true);
+
+        CustomTabsIntent customTabsIntent = builder.build();
+
+
+
+
+
+        if (rewardedAd!=null){
+
+            rewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+                @Override
+                public void onAdDismissedFullScreenContent() {
+                    AdsManager.mInterstitialAd  = null;
+                    AdsManager.load_int_ads(ListActivity.this);
+                    customTabsIntent.launchUrl(ListActivity.this, Uri.parse(url));
+                    super.onAdDismissedFullScreenContent();
+                }
+
+                @Override
+                public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
+                    customTabsIntent.launchUrl(ListActivity.this, Uri.parse(url));
+                    super.onAdFailedToShowFullScreenContent(adError);
+                }
+            });
+
+
+        } else {
+
+            AdsManager.mInterstitialAd  = null;
+            AdsManager.load_int_ads(ListActivity.this);
+            customTabsIntent.launchUrl(ListActivity.this, Uri.parse(url));
+        }
+    }
+
+    private void open_tab(String url) {
+
+        tab = "false";
+        InterstitialAd interstitialAd = AdsManager.mInterstitialAd;
+
+
+
+        Drawable drawable = ContextCompat.getDrawable(ListActivity.this, R.drawable.baseline_arrow_back_24);
+
+
+        drawable = DrawableCompat.wrap(drawable).mutate();
+
+        Bitmap bitmap = Bitmap.createBitmap(
+                drawable.getIntrinsicWidth(),
+                drawable.getIntrinsicHeight(),
+                Bitmap.Config.ARGB_8888
+        );
+
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        // Now set the close button icon
+        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+        builder.setToolbarColor(ContextCompat.getColor(ListActivity.this, R.color.app_color));
+        builder.setCloseButtonIcon(bitmap); // your vector converted to bitmap
+        builder.enableUrlBarHiding();
+        //builder.setShowTitle(true);
+
+        CustomTabsIntent customTabsIntent = builder.build();
+
+
+
+
+
+        if (interstitialAd!=null){
+
+
+            interstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+                @Override
+                public void onAdDismissedFullScreenContent() {
+
+                    customTabsIntent.launchUrl(ListActivity.this, Uri.parse(url));
+                    AdsManager.mInterstitialAd  = null;
+                    AdsManager.load_int_ads(ListActivity.this);
+                    super.onAdDismissedFullScreenContent();
+                }
+
+                @Override
+                public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
+                    customTabsIntent.launchUrl(ListActivity.this, Uri.parse(url));
+                    super.onAdFailedToShowFullScreenContent(adError);
+                }
+            });
+
+            interstitialAd.show(ListActivity.this);
+        } else {
+
+            AdsManager.mInterstitialAd  = null;
+            AdsManager.load_int_ads(ListActivity.this);
+            customTabsIntent.launchUrl(ListActivity.this, Uri.parse(url));
+        }
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -212,6 +566,27 @@ public class ListActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
     }
+
+    private boolean isInternetAvailable() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if (cm != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
+                return capabilities != null &&
+                        (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+                                || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
+                                || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET));
+            } else {
+                NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                return activeNetwork != null && activeNetwork.isConnected();
+            }
+        }
+        return false;
+    }
+
+
+
 
 
 }
