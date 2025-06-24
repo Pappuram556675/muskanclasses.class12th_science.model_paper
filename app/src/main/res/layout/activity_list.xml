@@ -6,15 +6,13 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-
-
     <!-- Main content area -->
     <LinearLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="false">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
@@ -33,11 +31,7 @@
                 android:id="@+id/webview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-
-
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-
     </LinearLayout>
-
 </androidx.drawerlayout.widget.DrawerLayout>

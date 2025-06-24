@@ -22,6 +22,7 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +32,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -152,9 +159,29 @@ public class RealTimeChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.app_color));
+
         setContentView(R.layout.activity_real_time_chat);
 
+
+
+
+
         toolbar = findViewById(R.id.toolbar);
+        ViewCompat.setOnApplyWindowInsetsListener(toolbar, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.statusBars());
+            v.setPadding(v.getPaddingLeft(), systemBars.top, v.getPaddingRight(), v.getPaddingBottom());
+            return insets;
+        });
+
+        ConstraintLayout mainLayout = findViewById(R.id.main); // R.id.main को XML में set करें
+
+        ViewCompat.setOnApplyWindowInsetsListener(mainLayout, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, v.getPaddingTop(), systemBars.right, systemBars.bottom);
+            return insets;
+        });
         setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {

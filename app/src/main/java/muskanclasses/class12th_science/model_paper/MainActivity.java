@@ -24,12 +24,14 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.webkit.ConsoleMessage;
 import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -40,8 +42,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.GravityCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -50,6 +56,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.OnUserEarnedRewardListener;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.gms.ads.rewarded.RewardItem;
@@ -91,7 +98,31 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.app_color));
+
         setContentView(R.layout.activity_main);
+
+
+
+
+
+        toolbar = findViewById(R.id.webtoolbar);
+        ViewCompat.setOnApplyWindowInsetsListener(toolbar, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.statusBars());
+            v.setPadding(v.getPaddingLeft(), systemBars.top, v.getPaddingRight(), v.getPaddingBottom());
+            return insets;
+        });
+
+        LinearLayout mainLayout = findViewById(R.id.main); // R.id.main को XML में set करें
+
+        ViewCompat.setOnApplyWindowInsetsListener(mainLayout, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, v.getPaddingTop(), systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+
 
         webView = findViewById(R.id.webview);
         swipeRefreshLayout = findViewById(R.id.swiperefresh);
@@ -513,6 +544,14 @@ public class MainActivity extends AppCompatActivity {
                 public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
                     customTabsIntent.launchUrl(MainActivity.this, Uri.parse(url));
                     super.onAdFailedToShowFullScreenContent(adError);
+                }
+            });
+
+            rewardedAd.show(MainActivity.this, new OnUserEarnedRewardListener() {
+                @Override
+                public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+
+                    AdsManager.mInterstitialAd  = null;
                 }
             });
 

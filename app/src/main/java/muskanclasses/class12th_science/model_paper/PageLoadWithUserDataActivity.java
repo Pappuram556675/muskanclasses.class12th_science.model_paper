@@ -24,6 +24,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -35,12 +36,15 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.OnUserEarnedRewardListener;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -68,8 +72,30 @@ public class PageLoadWithUserDataActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.app_color));
+
         setContentView(R.layout.activity_page_load_with_user_data);
+
+
+
+
+
+        toolbar = findViewById(R.id.toolbar);
+        ViewCompat.setOnApplyWindowInsetsListener(toolbar, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.statusBars());
+            v.setPadding(v.getPaddingLeft(), systemBars.top, v.getPaddingRight(), v.getPaddingBottom());
+            return insets;
+        });
+
+        LinearLayout mainLayout = findViewById(R.id.main); // R.id.main को XML में set करें
+
+        ViewCompat.setOnApplyWindowInsetsListener(mainLayout, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, v.getPaddingTop(), systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
         // Back button enable करें
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -468,6 +494,16 @@ public class PageLoadWithUserDataActivity extends AppCompatActivity {
                     super.onAdFailedToShowFullScreenContent(adError);
                 }
             });
+
+            rewardedAd.show(PageLoadWithUserDataActivity.this, new OnUserEarnedRewardListener() {
+                @Override
+                public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+
+
+                }
+            });
+
+
 
 
         } else {

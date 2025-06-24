@@ -5,6 +5,7 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="colorPrimary">#1747ED</item>
         <item name="colorPrimaryDark">#1747ED</item>
+
     </style>
 
     <style name="Theme._12thScienceModelPaper" parent="Base.Theme._12thScienceModelPaper" />

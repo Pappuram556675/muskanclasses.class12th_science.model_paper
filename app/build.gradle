@@ -17,7 +17,7 @@ android {
         applicationId "muskanclasses.class12th_science.model_paper"
         minSdk 25
         targetSdk 35
-        versionCode 3
+        versionCode 4
         versionName "1.02"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -67,6 +67,8 @@ dependencies {
 
     implementation libs.photoview
     implementation "androidx.lifecycle:lifecycle-runtime:2.9.1"
+    implementation 'androidx.core:core-ktx:1.12.0' // या इससे नया वर्जन
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation libs.lifecycle.extensions
     implementation libs.google.firebase.analytics
 

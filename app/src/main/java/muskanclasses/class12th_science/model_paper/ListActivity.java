@@ -19,6 +19,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.Window; // सुनिश्चित करें कि यह import है
 import android.webkit.ConsoleMessage;
 import android.webkit.CookieManager;
 import android.webkit.ValueCallback;
@@ -26,6 +28,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -34,12 +37,18 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
 import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.core.view.WindowCompat; // Edge-to-Edge के लिए महत्वपूर्ण
+import androidx.core.view.WindowInsetsCompat; // Edge-to-Edge इनसेट के लिए महत्वपूर्ण
+import androidx.core.view.ViewCompat; // Edge-to-Edge इनसेट लिसनर के लिए महत्वपूर्ण
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.OnUserEarnedRewardListener;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -50,8 +59,6 @@ public class ListActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
     private ValueCallback<Uri[]> filePathCallback;
-
-
 
     Toolbar toolbar;
 
@@ -71,13 +78,37 @@ public class ListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.app_color));
+
         setContentView(R.layout.activity_list);
 
 
 
 
-        // Back button enable करें
+
         toolbar = findViewById(R.id.toolbar);
+        ViewCompat.setOnApplyWindowInsetsListener(toolbar, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.statusBars());
+            v.setPadding(v.getPaddingLeft(), systemBars.top, v.getPaddingRight(), v.getPaddingBottom());
+            return insets;
+        });
+
+        LinearLayout mainLayout = findViewById(R.id.main); // R.id.main को XML में set करें
+
+        ViewCompat.setOnApplyWindowInsetsListener(mainLayout, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, v.getPaddingTop(), systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        // --- Edge-to-Edge कोड यहाँ समाप्त ---
+
+
+        // Back button enable करें
+
         setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {
@@ -104,9 +135,6 @@ public class ListActivity extends AppCompatActivity {
         mFirebaseAnalytics.logEvent("List_activity_open", bundle);
 
 
-
-
-
         swipeRefreshLayout = findViewById(R.id.swiperefresh);
 
         swipeRefreshLayout.setRefreshing(true);
@@ -122,14 +150,14 @@ public class ListActivity extends AppCompatActivity {
         webView.setOnLongClickListener(v -> true);
         webView.setLongClickable(false);
 
-// Enable essential settings
+        // Enable essential settings
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setDomStorageEnabled(true);
         webView.getSettings().setDatabaseEnabled(true);
         webView.setHapticFeedbackEnabled(false);
         webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 
-// Enable cookies
+        // Enable cookies
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true); // For API < 21
         cookieManager.setAcceptThirdPartyCookies(webView, true);
@@ -153,7 +181,6 @@ public class ListActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
-
 
 
         webView.loadUrl(getIntent().getStringExtra("url"));
@@ -205,11 +232,6 @@ public class ListActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
-
     }
 
     private void handel_consolemessage(String message) {
@@ -236,8 +258,6 @@ public class ListActivity extends AppCompatActivity {
         }
 
         if (firebase_event.equals("true")){
-
-
 
             Bundle bundle = new Bundle();
             bundle.putString("package", getPackageName());
@@ -453,9 +473,6 @@ public class ListActivity extends AppCompatActivity {
         CustomTabsIntent customTabsIntent = builder.build();
 
 
-
-
-
         if (rewardedAd!=null){
 
             rewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
@@ -463,35 +480,39 @@ public class ListActivity extends AppCompatActivity {
                 public void onAdDismissedFullScreenContent() {
                     AdsManager.mInterstitialAd  = null;
                     AdsManager.load_int_ads(ListActivity.this);
-                    customTabsIntent.launchUrl(ListActivity.this, Uri.parse(url));
+                    customTabsIntent.launchUrl(ListActivity.this, Uri.parse(message)); // Use 'message' parameter
                     super.onAdDismissedFullScreenContent();
                 }
 
                 @Override
                 public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
-                    customTabsIntent.launchUrl(ListActivity.this, Uri.parse(url));
+                    customTabsIntent.launchUrl(ListActivity.this, Uri.parse(message)); // Use 'message' parameter
                     super.onAdFailedToShowFullScreenContent(adError);
                 }
             });
 
+            // Make sure to show the ad if rewardedAd is not null
+            rewardedAd.show(ListActivity.this, new OnUserEarnedRewardListener() {
+                @Override
+                public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
 
+                    AdsManager.mInterstitialAd  = null;
+                }
+            });
         } else {
 
             AdsManager.mInterstitialAd  = null;
             AdsManager.load_int_ads(ListActivity.this);
-            customTabsIntent.launchUrl(ListActivity.this, Uri.parse(url));
+            customTabsIntent.launchUrl(ListActivity.this, Uri.parse(message)); // Use 'message' parameter
         }
     }
 
-    private void open_tab(String url) {
+    private void open_tab(String url) { // Note: 'url' parameter hides the class member 'url'
 
         tab = "false";
         InterstitialAd interstitialAd = AdsManager.mInterstitialAd;
 
-
-
         Drawable drawable = ContextCompat.getDrawable(ListActivity.this, R.drawable.baseline_arrow_back_24);
-
 
         drawable = DrawableCompat.wrap(drawable).mutate();
 
@@ -515,16 +536,11 @@ public class ListActivity extends AppCompatActivity {
         CustomTabsIntent customTabsIntent = builder.build();
 
 
-
-
-
         if (interstitialAd!=null){
-
 
             interstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                 @Override
                 public void onAdDismissedFullScreenContent() {
-
                     customTabsIntent.launchUrl(ListActivity.this, Uri.parse(url));
                     AdsManager.mInterstitialAd  = null;
                     AdsManager.load_int_ads(ListActivity.this);
@@ -538,9 +554,8 @@ public class ListActivity extends AppCompatActivity {
                 }
             });
 
-            interstitialAd.show(ListActivity.this);
+            interstitialAd.show(ListActivity.this); // Added missing show call
         } else {
-
             AdsManager.mInterstitialAd  = null;
             AdsManager.load_int_ads(ListActivity.this);
             customTabsIntent.launchUrl(ListActivity.this, Uri.parse(url));
@@ -584,9 +599,4 @@ public class ListActivity extends AppCompatActivity {
         }
         return false;
     }
-
-
-
-
-
 }

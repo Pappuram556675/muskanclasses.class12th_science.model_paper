@@ -5,14 +5,24 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+
 import com.google.firebase.database.*;
 
 public class SplashActivity extends AppCompatActivity {
@@ -26,7 +36,35 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.app_color));
+
         setContentView(R.layout.activity_splash);
+
+
+
+
+
+
+
+        RelativeLayout mainLayout = findViewById(R.id.splash_layout); // R.id.main को XML में set करें
+
+        ViewCompat.setOnApplyWindowInsetsListener(mainLayout, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, v.getPaddingTop(), systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+
+
+
+
+
+
+
 
         btnOpenApp = findViewById(R.id.btn_open_app);
         btnUpdateApp = findViewById(R.id.btn_update_app);
