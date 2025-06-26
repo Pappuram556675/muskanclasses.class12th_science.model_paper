@@ -32,6 +32,7 @@ public class muskan extends Application {
     private static String currentActivityName = "";
     private DatabaseReference messageRef;
     private long lastShownTimestamp = 0;
+    FirebaseAnalytics mFirebaseAnalytics;
 
     private static final String ONESIGNAL_APP_ID = "6803df43-7a70-4fe7-85bc-770700dfdf7e";
 
@@ -50,6 +51,7 @@ public class muskan extends Application {
 
 
 
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
 
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {

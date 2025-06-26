@@ -23,6 +23,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.*;
 
 public class SplashActivity extends AppCompatActivity {
@@ -32,6 +33,7 @@ public class SplashActivity extends AppCompatActivity {
 
     // 🔁 अपने app का real versionCode डालें (या BuildConfig.VERSION_CODE से लें)
     int currentVersionCode = 3;
+    FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +119,9 @@ public class SplashActivity extends AppCompatActivity {
 
         btnOpenApp.setOnClickListener(v -> {
 
+            Bundle bundle = new Bundle();
+            bundle.putString("package_name", getPackageName());
+            mFirebaseAnalytics.logEvent("app_open_btn_click", bundle);
 
             SharedPreferences sharedPreferences = getSharedPreferences("MyAppPreferences", MODE_PRIVATE);
             String name = sharedPreferences.getString("name", "null");
@@ -140,6 +145,13 @@ public class SplashActivity extends AppCompatActivity {
         });
 
         btnUpdateApp.setOnClickListener(v -> {
+
+            Bundle bundle = new Bundle();
+            bundle.putString("package_name", getPackageName());
+            mFirebaseAnalytics.logEvent("update_btn_click", bundle);
+
+
+
             final String appPackageName = getPackageName();
             try {
                 startActivity(new Intent(Intent.ACTION_VIEW,

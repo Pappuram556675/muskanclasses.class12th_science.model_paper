@@ -15,9 +15,12 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 public class NoInternetActivity extends AppCompatActivity {
 
     Button btn_try_again;
+    FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +33,9 @@ public class NoInternetActivity extends AppCompatActivity {
 
 
 
+        Bundle bundle = new Bundle();
+        bundle.putString("package_name", getPackageName());
+        mFirebaseAnalytics.logEvent("no_internet_activity_open", bundle);
 
 
 

@@ -170,12 +170,12 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
 
         // एक basic event log करें
         Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.METHOD, "app_start");
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, bundle);
+        bundle.putString("package_name", getPackageName());
+        mFirebaseAnalytics.logEvent("app_start", bundle);
 
 
 
@@ -248,6 +248,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
 
+                Bundle bundle = new Bundle();
+                bundle.putString("package_name", getPackageName());
+                mFirebaseAnalytics.logEvent("webview_error", bundle);
+
                 webView.setVisibility(GONE);
                 Intent intent = new Intent(getApplicationContext(), NoInternetActivity.class);
                 startActivity(intent);
@@ -290,6 +294,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (url.equals("true")){
 
+
+
+
             Intent intent = new Intent(getApplicationContext(), ListActivity.class);
             intent.putExtra("url", message);
             url = "false";
@@ -298,12 +305,38 @@ public class MainActivity extends AppCompatActivity {
 
         if (tab.equals("true")){
 
+            Bundle bundle = new Bundle();
+            bundle.putString("package_name", getPackageName());
+            mFirebaseAnalytics.logEvent("open_tab_ads", bundle);
             open_tab(message);
 
         }
 
+        if (pdf.equals("true")){
+
+
+
+            Intent intent = new Intent(getApplicationContext(), ZoomingActivity.class);
+            intent.putExtra("url", message);
+            pdf = "false";
+            startActivity(intent);
+        }
+
+        if (nca.equals("true")){
+
+
+
+            Intent intent = new Intent(getApplicationContext(), PageLoadWithUserDataActivity.class);
+            intent.putExtra("url", message);
+            nca = "false";
+            startActivity(intent);
+        }
+
         if (chrome.equals("true")){
 
+            Bundle bundle = new Bundle();
+            bundle.putString("package_name", getPackageName());
+            mFirebaseAnalytics.logEvent("open_chrome", bundle);
             Intent intent1 = new Intent(Intent.ACTION_VIEW, Uri.parse(message));
             startActivity(intent1);
 
@@ -323,6 +356,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (video_tab.equals("true")){
 
+            Bundle bundle = new Bundle();
+            bundle.putString("package_name", getPackageName());
+            mFirebaseAnalytics.logEvent("open_tab_video_ads", bundle);
             open_video_tab(message);
         }
 
@@ -347,21 +383,7 @@ public class MainActivity extends AppCompatActivity {
             chrome = "true";
         }
 
-        if (pdf.equals("true")){
 
-            Intent intent = new Intent(getApplicationContext(), ZoomingActivity.class);
-            intent.putExtra("url", message);
-            pdf = "false";
-            startActivity(intent);
-        }
-
-        if (nca.equals("true")){
-
-            Intent intent = new Intent(getApplicationContext(), PageLoadWithUserDataActivity.class);
-            intent.putExtra("url", message);
-            nca = "false";
-            startActivity(intent);
-        }
 
         if (message.equals("firebase_event")){
 
@@ -379,6 +401,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (message.equals("share")){
+
+
 
             Bundle bundle = new Bundle();
             bundle.putString("package", getPackageName());

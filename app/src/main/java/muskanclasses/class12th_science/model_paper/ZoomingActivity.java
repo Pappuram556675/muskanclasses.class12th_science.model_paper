@@ -241,6 +241,9 @@ public class ZoomingActivity extends AppCompatActivity {
 
         if (url.equals("true")){
 
+
+
+
             Intent intent = new Intent(getApplicationContext(), ListActivity.class);
             intent.putExtra("url", message);
             url = "false";
@@ -249,12 +252,38 @@ public class ZoomingActivity extends AppCompatActivity {
 
         if (tab.equals("true")){
 
+            Bundle bundle = new Bundle();
+            bundle.putString("package_name", getPackageName());
+            mFirebaseAnalytics.logEvent("open_tab_ads", bundle);
             open_tab(message);
 
         }
 
+        if (pdf.equals("true")){
+
+
+
+            Intent intent = new Intent(getApplicationContext(), ZoomingActivity.class);
+            intent.putExtra("url", message);
+            pdf = "false";
+            startActivity(intent);
+        }
+
+        if (nca.equals("true")){
+
+
+
+            Intent intent = new Intent(getApplicationContext(), PageLoadWithUserDataActivity.class);
+            intent.putExtra("url", message);
+            nca = "false";
+            startActivity(intent);
+        }
+
         if (chrome.equals("true")){
 
+            Bundle bundle = new Bundle();
+            bundle.putString("package_name", getPackageName());
+            mFirebaseAnalytics.logEvent("open_chrome", bundle);
             Intent intent1 = new Intent(Intent.ACTION_VIEW, Uri.parse(message));
             startActivity(intent1);
 
@@ -274,6 +303,9 @@ public class ZoomingActivity extends AppCompatActivity {
 
         if (video_tab.equals("true")){
 
+            Bundle bundle = new Bundle();
+            bundle.putString("package_name", getPackageName());
+            mFirebaseAnalytics.logEvent("open_tab_video_ads", bundle);
             open_video_tab(message);
         }
 
@@ -298,21 +330,7 @@ public class ZoomingActivity extends AppCompatActivity {
             chrome = "true";
         }
 
-        if (pdf.equals("true")){
 
-            Intent intent = new Intent(getApplicationContext(), ZoomingActivity.class);
-            intent.putExtra("url", message);
-            pdf = "false";
-            startActivity(intent);
-        }
-
-        if (nca.equals("true")){
-
-            Intent intent = new Intent(getApplicationContext(), PageLoadWithUserDataActivity.class);
-            intent.putExtra("url", message);
-            nca = "false";
-            startActivity(intent);
-        }
 
         if (message.equals("firebase_event")){
 
@@ -329,8 +347,9 @@ public class ZoomingActivity extends AppCompatActivity {
             nca = "true";
         }
 
-
         if (message.equals("share")){
+
+
 
             Bundle bundle = new Bundle();
             bundle.putString("package", getPackageName());
